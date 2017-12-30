@@ -1,34 +1,28 @@
 package MCChem;
 
-import org.bukkit.*;
-import org.bukkit.block.Block;
-import org.bukkit.block.BlockState;
-import org.bukkit.craftbukkit.v1_10_R1.CraftWorld;
-import org.bukkit.craftbukkit.v1_10_R1.entity.CraftPlayer;
-import org.bukkit.craftbukkit.v1_10_R1.inventory.CraftItemStack;
-import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.block.Action;
-import org.bukkit.event.block.BlockBreakEvent;
-import org.bukkit.event.block.BlockPlaceEvent;
-import org.bukkit.event.inventory.CraftItemEvent;
-import org.bukkit.event.inventory.PrepareItemCraftEvent;
-import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.inventory.CraftingInventory;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.ShapedRecipe;
-import org.bukkit.material.Crops;
-import org.bukkit.material.MaterialData;
+import net.minecraft.server.v1_10_R1.Items;
+        import org.bukkit.*;
+        import org.bukkit.block.Block;
+        import org.bukkit.entity.Player;
+        import org.bukkit.event.EventHandler;
+        import org.bukkit.event.block.BlockPlaceEvent;
+        import org.bukkit.event.inventory.CraftItemEvent;
+        import org.bukkit.event.inventory.PrepareItemCraftEvent;
+        import org.bukkit.inventory.CraftingInventory;
+        import org.bukkit.inventory.ItemStack;
+        import org.bukkit.inventory.ShapedRecipe;
+import org.bukkit.inventory.meta.PotionMeta;
 import org.bukkit.material.Wool;
-import org.bukkit.plugin.java.JavaPlugin;
-import org.bukkit.event.Listener;
-
+        import org.bukkit.plugin.java.JavaPlugin;
+        import org.bukkit.event.Listener;
+import org.bukkit.potion.PotionType;
 
 import java.util.logging.Logger;
 
 public class Main extends JavaPlugin implements Listener
 {
-    private ShapedRecipe recipe;
+    //private ShapedRecipe recipe;
+    private ShapedRecipe o2, candy, metmok, metcol, hcl;
     Logger log;
     public void onEnable()
     {
@@ -38,11 +32,27 @@ public class Main extends JavaPlugin implements Listener
         log.info("bondWater Loaded and Added Recipe!");
         getLogger().info("MineChemSA Enabled");
 
-        recipe = new ShapedRecipe(new ItemStack(Material.WOOD, 1));
-        recipe.shape("   ", "BA ", "   ");
-        recipe.setIngredient('A', Material.STONE);
-        recipe.setIngredient('B', Material.SPONGE);
-        this.getServer().addRecipe(recipe);
+        ItemStack itemstack  = new ItemStack(Material.POTION, 1);
+        itemstack.setDurability((short)16428);
+        hcl = new ShapedRecipe(itemstack);
+        hcl.shape("   ", "CL ", "   ");
+        hcl.setIngredient('L', Material.IRON_BLOCK);
+        hcl.setIngredient('C', new Wool(DyeColor.ORANGE));
+        this.getServer().addRecipe(hcl);
+
+        candy = new ShapedRecipe(new ItemStack(Material.SUGAR, 1));
+        candy.shape("   ", "CHO", "   ");
+        candy.setIngredient('C', new Wool(DyeColor.PINK));
+        candy.setIngredient('H', new Wool(DyeColor.ORANGE));
+        candy.setIngredient('O', new Wool(DyeColor.SILVER));
+        this.getServer().addRecipe(candy);
+
+        //Charcoal ItemStack = new ItemStack(Material.COAL, 1, (short) 1);
+        metmok = new ShapedRecipe(new ItemStack(Material.COAL, 1));
+        metmok.shape("   ", "CH ", "   ");
+        metmok.setIngredient('C', new Wool(DyeColor.PINK));
+        metmok.setIngredient('H', new Wool(DyeColor.ORANGE));
+        this.getServer().addRecipe(metmok);
     }
 
     public void onDisable()
@@ -64,72 +74,166 @@ public class Main extends JavaPlugin implements Listener
         nh3.setIngredient('N', new Wool(DyeColor.GRAY));
 
         ShapedRecipe co2 = new ShapedRecipe(new ItemStack(Material.SPONGE, 1));
-        co2.shape("   ", "COC", "   ");
+        co2.shape("   ", "OCO", "   ");
         co2.setIngredient('C', new Wool(DyeColor.PINK));
         co2.setIngredient('O', new Wool(DyeColor.SILVER));
-
-        /*ShapedRecipe hcl = new ShapedRecipe(new ItemStack(Material.STONE, 1));
-        //ShapedRecipe hcl = new ShapedRecipe(new ItemStack(Material.POTION, 1, (short) 16428));
-        hcl.shape("   ", "HL ", "   ");
-        co2.setIngredient('L', Material.IRON_BLOCK);
-        co2.setIngredient('H', new Wool(DyeColor.ORANGE));*/
 
         this.getServer().addRecipe(h2o);
         this.getServer().addRecipe(nh3);
         this.getServer().addRecipe(co2);
-        //this.getServer().addRecipe(hcl);
     }
 
     @EventHandler
     public void onPrepareItemCraft(PrepareItemCraftEvent event)
     {
-        if (event.getRecipe().getResult().getType().equals(Material.WOOD))
-        {
+        if(event.getRecipe().getResult().getType().equals(Material.SUGAR)) //사탕수수 조합 제작
+        { //PINK, ORANGE, SILVER
+            log.info("candy getrecipe");
             CraftingInventory inventory = event.getInventory();
-            boolean found1 = false, found2 = false;
-            for (ItemStack item : inventory.getMatrix())
+            boolean found1=false, found2=false, found3=false;
+            for(ItemStack item : inventory.getMatrix())
             {
-                if (item.getType().equals(Material.SPONGE) && item.getAmount() >= 2)
+                if(item.getType().equals(Material.WOOL) && item.getDurability() == 6 && item.getAmount() >= 12)
                 {
                     found1 = true;
                 }
-                else if (item.getType().equals(Material.STONE))
+                if(item.getType().equals(Material.WOOL) && item.getDurability() == 1 && item.getAmount() >= 22)
                 {
                     found2 = true;
                 }
+                if(item.getType().equals(Material.WOOL) && item.getDurability() == 8 && item.getAmount() >= 11)
+                {
+                    found3 = true;
+                }
             }
-            if (!found1 || !found2) inventory.setResult(null);
+            if(!found1 || !found2 || !found3) inventory.setResult(null);
+        }
+
+        //메테인 목탄
+        if(event.getRecipe().getResult().getType().equals(Material.COAL)) //metmok
+        {
+            if (event.getRecipe().getResult().getDurability() == 1)
+            {
+                CraftingInventory inventory = event.getInventory();
+                boolean found1 = false, found2 = false;
+                for (ItemStack item : inventory.getMatrix())
+                {
+                    if (item.getType().equals(Material.WOOL) && item.getDurability() == 6 && item.getAmount() >= 2)
+                    {
+                        found1 = true;
+                    }
+                    if (item.getType().equals(Material.WOOL) && item.getDurability() == 1 && item.getAmount() >= 6)
+                    {
+                        found2 = true;
+                    }
+                }
+                if (!found1 || !found2) inventory.setResult(null);
+            }
+            else
+            {
+                log.info("*_*");
+                CraftingInventory inventory = event.getInventory();
+                boolean found1 = false, found2 = false;
+                for (ItemStack item : inventory.getMatrix())
+                {
+                    if (item.getType().equals(Material.WOOL) && item.getDurability() == 6)
+                    {
+                        log.info("1");
+                        found1 = true;
+                    }
+                    if (item.getType().equals(Material.WOOL) && item.getDurability() == 1 && item.getAmount() >= 4)
+                    {
+                        log.info("2");
+                        found2 = true;
+                    }
+                }
+                if (!found1 || !found2) inventory.setResult(null);
+            }
         }
     }
 
     @EventHandler
     public void onCraftItem(CraftItemEvent event)
     {
-        if (event.getRecipe().getResult().getType().equals(Material.WOOD))
-        {
-            CraftingInventory inventory = event.getInventory();
-            boolean found1 = false, found2 = false;
-            ItemStack sponge = null;
-            for (ItemStack item : inventory.getMatrix())
-            {
-                if (item.getType().equals(Material.SPONGE) && item.getAmount() >= 2)
-                {
-                    found1 = true;
-                    sponge = item;
+        log.info("onCraftItem Enabled");
+        //log.info("test[onCraft] : " + );
+
+            if (event.getRecipe().getResult().getType().equals(Material.SUGAR)) //사탕수수 조합 제작
+            { //PINK, ORANGE, SILVER
+                log.info("candy received");
+                CraftingInventory inventory = event.getInventory();
+                boolean found1 = false, found2 = false, found3 = false;
+                ItemStack candy = null;
+                ItemStack f1 = null, f2 = null;
+                for (ItemStack item : inventory.getMatrix()) {
+                    if (item.getType().equals(Material.WOOL) && item.getDurability() == 6 && item.getAmount() >= 12) {
+                        found1 = true;
+                        f1 = item;
+                    }
+                    if (item.getType().equals(Material.WOOL) && item.getDurability() == 1 && item.getAmount() >= 22) {
+                        found2 = true;
+                        candy = item;
+                    }
+                    if (item.getType().equals(Material.WOOL) && item.getDurability() == 8 && item.getAmount() >= 11) {
+                        found3 = true;
+                        f2 = item;
+                    }
                 }
-                else if (item.getType().equals(Material.STONE))
-                {
-                    found2 = true;
+                if (!found1 || !found2 || !found3) inventory.setResult(null);
+                else {
+                    candy.setAmount(candy.getAmount() - 23);
+                    f1.setAmount(f1.getAmount() - 13);
+                    f2.setAmount(f2.getAmount() - 12);
                 }
             }
-            if (!found1 || !found2) inventory.setResult(null);
-            else
+
+            //메테인 목탄
+            if (event.getRecipe().getResult().getType().equals(Material.COAL)) //metmok
             {
-                sponge.setAmount(sponge.getAmount() - event.getRecipe().getResult().getAmount());
+                if (event.getRecipe().getResult().getDurability() == 1) {
+                    CraftingInventory inventory = event.getInventory();
+                    boolean found1 = false, found2 = false;
+                    ItemStack f1 = null, f2 = null;
+                    for (ItemStack item : inventory.getMatrix()) {
+                        if (item.getType().equals(Material.WOOL) && item.getDurability() == 6 && item.getAmount() >= 2) {
+                            f1 = item;
+                            found1 = true;
+                        }
+                        if (item.getType().equals(Material.WOOL) && item.getDurability() == 1 && item.getAmount() >= 6) {
+                            f2 = item;
+                            found2 = true;
+                        }
+                    }
+                    if (!found1 || !found2) inventory.setResult(null);
+                    else {
+                        f1.setAmount(f1.getAmount() - 3);
+                        f2.setAmount(f2.getAmount() - 7);
+                    }
+                } else {
+                    log.info("*_*");
+                    CraftingInventory inventory = event.getInventory();
+                    boolean found1 = false, found2 = false;
+                    ItemStack f1 = null, f2 = null;
+                    for (ItemStack item : inventory.getMatrix()) {
+                        if (item.getType().equals(Material.WOOL) && item.getDurability() == 6) {
+                            log.info("1");
+                            f1 = item;
+                            found1 = true;
+                        }
+                        if (item.getType().equals(Material.WOOL) && item.getDurability() == 1 && item.getAmount() >= 4) {
+                            log.info("2");
+                            f2 = item;
+                            found2 = true;
+                        }
+                    }
+                    if (!found1 || !found2) inventory.setResult(null);
+                    else {
+                        f1.setAmount(f1.getAmount() - 2);
+                        f2.setAmount(f2.getAmount() - 5);
+                    }
+                }
             }
         }
-    }
-
 
     @EventHandler
     public void onBlockPlace(BlockPlaceEvent e)
