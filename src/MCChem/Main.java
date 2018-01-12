@@ -25,7 +25,7 @@ import java.util.logging.Logger;
 public class Main extends JavaPlugin implements Listener
 {
     //private ShapedRecipe recipe;
-    private ShapedRecipe o2, candy, metmok, luck, hcl, egg, reg;
+    private ShapedRecipe candy, metmok, luck, hcl, egg, reg, o2, glow;
     Logger log;
     public void onEnable()
     {
@@ -67,7 +67,7 @@ public class Main extends JavaPlugin implements Listener
         luck.setIngredient('O', new Wool(DyeColor.SILVER));
         this.getServer().addRecipe(luck);
 
-        Potion potionreg = new Potion(PotionType.REGEN);
+        Potion potionreg = new Potion(PotionType.INSTANT_HEAL);
         potionreg.setSplash(true);
         ItemStack itemstack3 = potionreg.toItemStack(1);
         reg = new ShapedRecipe(itemstack3);
@@ -76,6 +76,14 @@ public class Main extends JavaPlugin implements Listener
         reg.setIngredient('O', new Wool(DyeColor.SILVER));
         this.getServer().addRecipe(reg);
 
+        Potion potionbreath = new Potion(PotionType.WATER_BREATHING);
+        potionbreath.setSplash(true);
+        ItemStack itemstack4 = potionbreath.toItemStack(1);
+        o2 = new ShapedRecipe(itemstack4);
+        o2.shape("   ", " O ", "   ");
+        o2.setIngredient('O', new Wool(DyeColor.SILVER));
+        this.getServer().addRecipe(o2);
+
         egg = new ShapedRecipe(new ItemStack(Material.EGG, 1));
         egg.shape("   ", "ACO", "   ");
         ItemStack glass = new ItemStack(Material.STAINED_GLASS, 1, (short)3);
@@ -83,6 +91,12 @@ public class Main extends JavaPlugin implements Listener
         egg.setIngredient('C', new Wool(DyeColor.PINK));
         egg.setIngredient('O', new Wool(DyeColor.SILVER));
         this.getServer().addRecipe(egg);
+
+        glow = new ShapedRecipe(new ItemStack(Material.GLOWSTONE, 1));
+        glow.shape("GGG", "GNG", "GGG");
+        glow.setIngredient('G', Material.GLASS);
+        glow.setIngredient('N', new Wool(DyeColor.PURPLE));
+        this.getServer().addRecipe(glow);
     }
 
     public void onDisable()
@@ -160,7 +174,7 @@ public class Main extends JavaPlugin implements Listener
                 }
                 if(!f1 || !f2 || !f3) inventory.setResult(null);
             }
-            if(meta.getBasePotionData().getType().equals(PotionType.REGEN))
+            if(meta.getBasePotionData().getType().equals(PotionType.INSTANT_HEAL))
             {
                 log.info("regen detected");
                 CraftingInventory inventory = event.getInventory();
@@ -177,6 +191,20 @@ public class Main extends JavaPlugin implements Listener
                     }
                 }
                 if(!f1 || !f2) inventory.setResult(null);
+            }
+            if(meta.getBasePotionData().getType().equals(PotionType.WATER_BREATHING))
+            {
+                log.info("waterbreath detected");
+                CraftingInventory inventory = event.getInventory();
+                boolean f1 = false;
+                for(ItemStack item : inventory.getMatrix())
+                {
+                    if(item.getType().equals(Material.WOOL) && item.getDurability() == 8 && item.getAmount() >= 2)
+                    {
+                        f1 = true;
+                    }
+                }
+                if(!f1) inventory.setResult(null);
             }
 
         }
@@ -348,7 +376,7 @@ public class Main extends JavaPlugin implements Listener
                 }
             }
 
-            if(meta.getBasePotionData().getType().equals(PotionType.REGEN))
+            if(meta.getBasePotionData().getType().equals(PotionType.INSTANT_HEAL))
             {
                 log.info("regen detected2");
                 CraftingInventory inventory = event.getInventory();
@@ -372,6 +400,26 @@ public class Main extends JavaPlugin implements Listener
                 {
                     found1.setAmount(found1.getAmount()-3);
                     found2.setAmount(found2.getAmount()-3);
+                }
+            }
+            if(meta.getBasePotionData().getType().equals(PotionType.WATER_BREATHING))
+            {
+                log.info("waterbreath detected");
+                CraftingInventory inventory = event.getInventory();
+                boolean f1 = false;
+                ItemStack water = null;
+                for(ItemStack item : inventory.getMatrix())
+                {
+                    if(item.getType().equals(Material.WOOL) && item.getDurability() == 8 && item.getAmount() >= 2)
+                    {
+                        f1 = true;
+                        water = item;
+                    }
+                }
+                if(!f1) inventory.setResult(null);
+                else
+                {
+                    water.setAmount(water.getAmount()-3);
                 }
             }
         }
@@ -572,7 +620,7 @@ public class Main extends JavaPlugin implements Listener
                 if(color.equals(DyeColor.ORANGE))
                 {
                     log.info("fire BOOM!!!");
-                    player.getWorld().createExplosion(b1.getLocation(), 15F); //규모 15F (크리퍼 4F)
+                    player.getWorld().createExplosion(b1.getLocation(), 6F); //규모 6F (크리퍼 4F)
                     player.getWorld().playEffect(b1.getLocation(), Effect.MOBSPAWNER_FLAMES, 10);
                 }
             }
