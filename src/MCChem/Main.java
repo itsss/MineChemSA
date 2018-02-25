@@ -25,7 +25,7 @@ import java.util.logging.Logger;
 public class Main extends JavaPlugin implements Listener
 {
     //private ShapedRecipe recipe;
-    private ShapedRecipe candy, metmok, luck, hcl, egg, reg, o2, glow;
+    private ShapedRecipe candy, metmok, luck, hcl, egg, reg, o2, glow, sio2;
     Logger log;
     public void onEnable()
     {
@@ -33,7 +33,7 @@ public class Main extends JavaPlugin implements Listener
         log = this.getLogger();
         this.bondWater();
         log.info("bondWater Loaded and Added Recipe!");
-        getLogger().info("MineChemSA Enabled");
+        getLogger().info("MineChemSA Enabled"); //MineChemSA 기본
 
         ItemStack itemstack  = new ItemStack(Material.POTION, 1);
         itemstack.setDurability((short)16428);
@@ -41,21 +41,21 @@ public class Main extends JavaPlugin implements Listener
         hcl.shape("   ", "CL ", "   ");
         hcl.setIngredient('L', Material.IRON_BLOCK);
         hcl.setIngredient('C', new Wool(DyeColor.ORANGE));
-        this.getServer().addRecipe(hcl);
+        this.getServer().addRecipe(hcl); //염산 (HCl)
 
         candy = new ShapedRecipe(new ItemStack(Material.SUGAR, 20));
         candy.shape("   ", "CHO", "   ");
         candy.setIngredient('C', new Wool(DyeColor.PINK));
         candy.setIngredient('H', new Wool(DyeColor.ORANGE));
         candy.setIngredient('O', new Wool(DyeColor.SILVER));
-        this.getServer().addRecipe(candy);
+        this.getServer().addRecipe(candy); //Sucrose
 
         //Charcoal ItemStack = new ItemStack(Material.COAL, 1, (short) 1);
         metmok = new ShapedRecipe(new ItemStack(Material.COAL, 1));
         metmok.shape("   ", "CH ", "   ");
         metmok.setIngredient('C', new Wool(DyeColor.PINK));
         metmok.setIngredient('H', new Wool(DyeColor.ORANGE));
-        this.getServer().addRecipe(metmok);
+        this.getServer().addRecipe(metmok); //Metane
 
         Potion potionluck = new Potion(PotionType.LUCK);
         potionluck.setSplash(true);
@@ -65,7 +65,7 @@ public class Main extends JavaPlugin implements Listener
         luck.setIngredient('H', new Wool(DyeColor.ORANGE));
         luck.setIngredient('C', new Wool(DyeColor.PINK));
         luck.setIngredient('O', new Wool(DyeColor.SILVER));
-        this.getServer().addRecipe(luck);
+        this.getServer().addRecipe(luck); //Carbonic Acid
 
         Potion potionreg = new Potion(PotionType.INSTANT_HEAL);
         potionreg.setSplash(true);
@@ -74,7 +74,7 @@ public class Main extends JavaPlugin implements Listener
         reg.shape("   ", " HO", "   ");
         reg.setIngredient('H', new Wool(DyeColor.ORANGE));
         reg.setIngredient('O', new Wool(DyeColor.SILVER));
-        this.getServer().addRecipe(reg);
+        this.getServer().addRecipe(reg); //Hydrogen Peroxide
 
         Potion potionbreath = new Potion(PotionType.WATER_BREATHING);
         potionbreath.setSplash(true);
@@ -82,7 +82,7 @@ public class Main extends JavaPlugin implements Listener
         o2 = new ShapedRecipe(itemstack4);
         o2.shape("   ", " O ", "   ");
         o2.setIngredient('O', new Wool(DyeColor.SILVER));
-        this.getServer().addRecipe(o2);
+        this.getServer().addRecipe(o2); //Oxygen Potion
 
         egg = new ShapedRecipe(new ItemStack(Material.EGG, 1));
         egg.shape("   ", "ACO", "   ");
@@ -90,13 +90,19 @@ public class Main extends JavaPlugin implements Listener
         egg.setIngredient('A', glass.getData());
         egg.setIngredient('C', new Wool(DyeColor.PINK));
         egg.setIngredient('O', new Wool(DyeColor.SILVER));
-        this.getServer().addRecipe(egg);
+        this.getServer().addRecipe(egg); //Egg
 
         glow = new ShapedRecipe(new ItemStack(Material.GLOWSTONE, 1));
         glow.shape("GGG", "GNG", "GGG");
         glow.setIngredient('G', Material.GLASS);
         glow.setIngredient('N', new Wool(DyeColor.PURPLE));
-        this.getServer().addRecipe(glow);
+        this.getServer().addRecipe(glow); //Glowstone
+
+        sio2 = new ShapedRecipe(new ItemStack(Material.GLASS, 1));
+        sio2.shape("   ", " SO", "   ");
+        sio2.setIngredient('S', new Wool(DyeColor.RED));
+        sio2.setIngredient('O', new Wool(DyeColor.SILVER));
+        this.getServer().addRecipe(sio2); //SiO2
     }
 
     public void onDisable()
@@ -113,12 +119,12 @@ public class Main extends JavaPlugin implements Listener
         h2o.setIngredient('O', new Wool(DyeColor.SILVER));
 
         ShapedRecipe nh3 = new ShapedRecipe(new ItemStack(Material.QUARTZ_BLOCK, 1));
-        nh3.shape(" H ", " N ", "H H");
+        nh3.shape(" H ", " N ", "H H"); //NH3
         nh3.setIngredient('H', new Wool(DyeColor.ORANGE));
         nh3.setIngredient('N', new Wool(DyeColor.GRAY));
 
         ShapedRecipe co2 = new ShapedRecipe(new ItemStack(Material.SPONGE, 1));
-        co2.shape("   ", "OCO", "   ");
+        co2.shape("   ", "OCO", "   "); //CO2
         co2.setIngredient('C', new Wool(DyeColor.PINK));
         co2.setIngredient('O', new Wool(DyeColor.SILVER));
 
@@ -133,26 +139,8 @@ public class Main extends JavaPlugin implements Listener
         if(event.getRecipe().getResult().getType().equals(Material.SPLASH_POTION))
         {
             PotionMeta meta = (PotionMeta) event.getRecipe().getResult().getItemMeta();
-            /*if(meta.getBasePotionData().getType().equals(PotionType.INSTANT_HEAL))
-            {
-                log.info("HEAL POTION DETECTED");
-                CraftingInventory inventory = event.getInventory();
-                boolean f1 = false, f2 = false;
-                for(ItemStack item : inventory.getMatrix())
-                {
-                    if(item.getType().equals(Material.WOOL) && item.getDurability() == 1 && item.getAmount() >= 2)
-                    {
-                        f1 = true;
-                    }
-                    if(item.getType().equals(Material.WOOL) && item.getDurability() == 8 && item.getAmount() >= 2)
-                    {
-                        f2 = true;
-                    } //H2O2 => 투척치료 포션
-                }
-                if(!f1 || !f2) inventory.setResult(null);
-            }*/
 
-            if(meta.getBasePotionData().getType().equals(PotionType.LUCK))
+            if(meta.getBasePotionData().getType().equals(PotionType.LUCK)) //luck potion
             {
                 log.info("luck detected");
                 CraftingInventory inventory = event.getInventory();
@@ -208,12 +196,7 @@ public class Main extends JavaPlugin implements Listener
             }
 
         }
-        /*PotionMeta meta = (PotionMeta) event.getRecipe().getResult().getItemMeta();
-        log.info("meta" + meta.getBasePotionData().getType());
-        if(meta.getBasePotionData().getType().equals(PotionType.INSTANT_DAMAGE))
-        {
-            log.info("Instant Damage Potion Detected");
-        }*/
+
         if(event.getRecipe().getResult().getType().equals(Material.SUGAR)) //사탕수수 조합 제작
         { //PINK, ORANGE, SILVER
             log.info("candy getrecipe");
@@ -257,6 +240,7 @@ public class Main extends JavaPlugin implements Listener
                 }
                 if (!found1 || !found2) inventory.setResult(null);
             }
+
             else
             {
                 log.info("*_*");
@@ -278,6 +262,7 @@ public class Main extends JavaPlugin implements Listener
                 if (!found1 || !found2) inventory.setResult(null);
             }
         }
+
         if(event.getRecipe().getResult().getType().equals(Material.EGG))
         {
             log.info("egg getrecipe");
@@ -285,7 +270,7 @@ public class Main extends JavaPlugin implements Listener
             boolean found1 = false, found2 = false, found3 = false;
             for(ItemStack item : inventory.getMatrix())
             {
-                ItemStack glass = new ItemStack(Material.STAINED_GLASS, 1, (short)3);
+                //ItemStack glass = new ItemStack(Material.STAINED_GLASS, 1, (short)3);
                 //egg.setIngredient('A', glass.getData());
                 if(item.getType().equals(Material.STAINED_GLASS) && item.getDurability() == 3)
                 {
@@ -307,6 +292,27 @@ public class Main extends JavaPlugin implements Listener
             if(!found1 || !found2 || !found3) inventory.setResult(null);
         }
         //CaCO3 달걀
+
+        if(event.getRecipe().getResult().getType().equals(Material.GLASS)) //SiO2
+        {
+            log.info("glass getrecipe");
+            CraftingInventory inventory = event.getInventory();
+            boolean found1 = false, found2 = false;
+            for(ItemStack item : inventory.getMatrix())
+            {
+                if(item.getType().equals(Material.WOOL) && item.getDurability() == 14)
+                {
+                    log.info("si");
+                    found1 = true;
+                }
+                if(item.getType().equals(Material.WOOL) && item.getDurability() == 8 && item.getAmount() >= 2)
+                {
+                    log.info("o2");
+                    found2 = true;
+                }
+            }
+            if(!found1 || !found2) inventory.setResult(null);
+        }
     }
 
     @EventHandler
@@ -317,32 +323,7 @@ public class Main extends JavaPlugin implements Listener
         if(event.getRecipe().getResult().getType().equals(Material.SPLASH_POTION))
         {
             PotionMeta meta = (PotionMeta) event.getRecipe().getResult().getItemMeta();
-            /*if(meta.getBasePotionData().getType().equals(PotionType.INSTANT_HEAL))
-            {
-                log.info("HEAL POTION DETECTED");
-                CraftingInventory inventory = event.getInventory();
-                boolean f1 = false, f2 = false;
-                ItemStack found1 = null, found2 = null;
-                for(ItemStack item : inventory.getMatrix())
-                {
-                    if(item.getType().equals(Material.WOOL) && item.getDurability() == 1 && item.getAmount() >= 2)
-                    {
-                        f1 = true;
-                        found1 = item;
-                    }
-                    if(item.getType().equals(Material.WOOL) && item.getDurability() == 8 && item.getAmount() >= 2)
-                    {
-                        f2 = true;
-                        found2 = item;
-                    } //H2O2 => 투척치료 포션
-                }
-                if(!f1 || !f2) inventory.setResult(null);
-                else
-                {
-                    found1.setAmount(found1.getAmount()-3);
-                    found2.setAmount(found1.getAmount()-3);
-                }
-            }*/
+
             if(meta.getBasePotionData().getType().equals(PotionType.LUCK))
             {
                 log.info("luck detected");
@@ -367,6 +348,7 @@ public class Main extends JavaPlugin implements Listener
                         found3 = item;
                     } //H2CO3 => 행운 포션
                 }
+
                 if(!f1 || !f2 || !f3) inventory.setResult(null);
                 else
                 {
@@ -402,6 +384,7 @@ public class Main extends JavaPlugin implements Listener
                     found2.setAmount(found2.getAmount()-3);
                 }
             }
+
             if(meta.getBasePotionData().getType().equals(PotionType.WATER_BREATHING))
             {
                 log.info("waterbreath detected");
@@ -515,6 +498,7 @@ public class Main extends JavaPlugin implements Listener
                 }
             }
         }
+
         if(event.getRecipe().getResult().getType().equals(Material.EGG))
         {
             log.info("egg getrecipe");
@@ -550,6 +534,35 @@ public class Main extends JavaPlugin implements Listener
                 f1.setAmount(f1.getAmount()-1);
                 f2.setAmount(f2.getAmount()-1);
                 f3.setAmount(f3.getAmount()-4);
+            }
+        }
+
+        if(event.getRecipe().getResult().getType().equals(Material.GLASS)) //SiO2
+        {
+            log.info("glass getrecipe");
+            CraftingInventory inventory = event.getInventory();
+            boolean found1 = false, found2 = false;
+            ItemStack f1 = null, f2 = null;
+            for(ItemStack item : inventory.getMatrix())
+            {
+                if(item.getType().equals(Material.WOOL) && item.getDurability() == 14)
+                {
+                    log.info("si");
+                    f1 = item;
+                    found1 = true;
+                }
+                if(item.getType().equals(Material.WOOL) && item.getDurability() == 8 && item.getAmount() >= 2)
+                {
+                    log.info("o2");
+                    f2 = item;
+                    found2 = true;
+                }
+            }
+            if(!found1 || !found2) inventory.setResult(null);
+            else
+            {
+                f1.setAmount(f1.getAmount()-1);
+                f2.setAmount(f2.getAmount()-3);
             }
         }
     }
@@ -603,7 +616,7 @@ public class Main extends JavaPlugin implements Listener
 
         }
 
-        else if (e.getBlockPlaced().getType().equals(Material.FIRE)) //H Boom
+        else if (e.getBlockPlaced().getType().equals(Material.FIRE)) //Hydrogen Bomb Effect (이스터 에그)
         {
             log.info("fire install");
             Player player = e.getPlayer();
