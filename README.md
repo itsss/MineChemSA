@@ -2,6 +2,9 @@
 Minecraft Chemistry Education (Server Plugin)
 
 ## Demonstration
+[![MineChemSA Youtube Video](https://img.youtube.com/vi/xI2HVR3NsCU/0.jpg)](https://www.youtube.com/watch?v=xI2HVR3NsCU)
+
+
 https://youtu.be/xI2HVR3NsCU
 
 ## Usage
